@@ -1,0 +1,41 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+
+<div class="row justify-content-center mt-5 mb-5">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">User Feedback List</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>SI NO.</th>
+                            <th>Feedback Content</th>
+                            <th>User</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for feedback in feedbackData %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ feedback.feedback_content }}</td>
+                            <td>{{ feedback.user.user_name }}</td>  
+                            
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4">No feedback available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

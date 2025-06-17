@@ -1,0 +1,43 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Reply Form -->
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Reply Entry</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <label for="txt_reply" class="col-sm-3 col-form-label">Reply</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="txt_reply" name="txt_reply" 
+                                pattern="^[A-Z]+[a-zA-Z0-9 .,!?]*$" 
+                                title="Reply must start with a capital letter and can contain letters, numbers, spaces, and basic punctuation"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-9 offset-sm-3">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location = "{% url 'Admin:reply' %}"
+</script>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,83 @@
+{% extends 'Admin/Header.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <!-- Expense Type Form -->
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Expense Type Entry</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <label for="txt_expensetype" class="col-sm-3 col-form-label">Expense Type</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="txt_expensetype" name="txt_expensetype" 
+                                pattern="^[A-Z]+[a-zA-Z ]*$" 
+                                title="Expense Type must start with capital letter and contain only letters and spaces"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-9 offset-sm-3">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Expense Type Table -->
+<div class="row justify-content-center mt-5 mb-5">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Expense Type List</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>SI NO</th>
+                            <th>EXPENSE TYPE</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in expensetypeData %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{i.expensetype_name}}</td>
+                            <td><a href="{% url 'Admin:deleteExpenseType' i.id %}" class="btn btn-danger btn-sm">Delete</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location = "{% url 'Admin:expensetype' %}"
+</script>
+{% endif %}
+</html>
+
+{% endblock content %}
