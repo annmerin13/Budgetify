@@ -1,0 +1,100 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Saving Head Form -->
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Saving Head Entry</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <label for="txt_title" class="col-sm-3 col-form-label">Title</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="txt_title" name="txt_title" 
+                                pattern="^[A-Z]+[a-zA-Z ]*$" 
+                                title="Title must start with capital letter and contain only letters and spaces"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="txt_goal" class="col-sm-3 col-form-label">Goal</label>
+                        <div class="col-sm-9">
+                            <input type="number" class="form-control" id="txt_goal" name="txt_goal" 
+                                min="0" step="0.01" 
+                                title="Enter a valid goal amount (minimum 0)"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-9 offset-sm-3">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Saving Head Table -->
+<div class="row justify-content-center mt-5 mb-5">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Saving Head List</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>SI NO.</th>
+                            <th>TITLE</th>
+                            <th>GOAL</th>
+                            <th>DATE</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in savingheadData %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{i.savinghead_title}}</td>
+                            <td>{{i.savinghead_goal}}</td>
+                            <td>{{i.savinghead_date}}</td>
+                            <td>
+                                <a href="{% url 'User:deleteSavingHead' i.id %}" class="btn btn-danger btn-sm">Delete</a>
+                                <a href="{% url 'User:savingbody' i.id %}" class="btn btn-primary btn-sm">Savingbody</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location = "{% url 'User:savinghead' %}"
+    </script>
+{% endif %}
+</html>
+
+{% endblock content %}

@@ -1,0 +1,63 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Tenure/Bill Form -->
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Tenure Entry</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <label for="txt_name" class="col-sm-3 col-form-label">Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="txt_name" name="txt_name" 
+                                pattern="^[A-Z]+[a-zA-Z ]*$" 
+                                title="Name must start with capital letter and contain only letters and spaces"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="tenure_bill" class="col-sm-3 col-form-label">Tenure</label>
+                        <div class="col-sm-9">
+                            <input type="file" class="form-control" id="tenure_bill" name="tenure_bill">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="txt_amount" class="col-sm-3 col-form-label">Amount</label>
+                        <div class="col-sm-9">
+                            <input type="number" class="form-control" id="txt_amount" name="txt_amount" 
+                                min="0" step="0.01" 
+                                title="Enter a valid amount (minimum 0)"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-9 offset-sm-3">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+{% endblock content %}

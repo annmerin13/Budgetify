@@ -1,0 +1,106 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Reports Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container { width: 30%; display: inline-block; margin: 20px; }
+        .table-container { margin: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Financial Reports Dashboard</h1>
+    
+    <!-- Charts -->
+    <div class="chart-container">
+        <canvas id="incomeChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="expenseChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="savingsChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="budgetChart"></canvas>
+    </div>
+
+    <!-- Summary Tables -->
+    <div class="table-container">
+        <h2>Income Summary</h2>
+        <table border="1">
+            <tr><th>Category</th><th>Total</th><th>Details</th></tr>
+            {% for item in income_data %}
+            <tr>
+                <td>{{ item.incomecategory__incometype_name }}</td>
+                <td>{{ item.total }}</td>
+                <td><a href="{% url 'User:detailed_report' 'income' %}">View Details</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- Add similar tables for expense_data, savings_data, budget_data -->
+
+    <script>
+        const chartData = {{ chart_data|safe }};
+        
+        // Income Pie Chart
+        new Chart(document.getElementById('incomeChart'), {
+            type: 'pie',
+            data: {
+                labels: chartData.income.labels,
+                datasets: [{
+                    data: chartData.income.values,
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+                }]
+            },
+            options: { title: { display: true, text: 'Income Distribution' } }
+        });
+
+        // Expense Pie Chart
+        new Chart(document.getElementById('expenseChart'), {
+            type: 'pie',
+            data: {
+                labels: chartData.expense.labels,
+                datasets: [{
+                    data: chartData.expense.values,
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+                }]
+            },
+            options: { title: { display: true, text: 'Expense Distribution' } }
+        });
+
+        // Savings Bar Chart
+        new Chart(document.getElementById('savingsChart'), {
+            type: 'bar',
+            data: {
+                labels: chartData.savings.labels,
+                datasets: [{
+                    label: 'Savings',
+                    data: chartData.savings.values,
+                    backgroundColor: '#36A2EB'
+                }]
+            },
+            options: { title: { display: true, text: 'Savings by Goal' } }
+        });
+
+        // Budget vs Actual Bar Chart
+        new Chart(document.getElementById('budgetChart'), {
+            type: 'bar',
+            data: {
+                labels: chartData.budget.labels,
+                datasets: [
+                    { label: 'Budget', data: chartData.budget.budget, backgroundColor: '#36A2EB' },
+                    { label: 'Actual', data: chartData.budget.actual, backgroundColor: '#FF6384' }
+                ]
+            },
+            options: { title: { display: true, text: 'Budget vs Actual Spending' } }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}
