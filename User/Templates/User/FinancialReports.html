@@ -1,0 +1,361 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Include gauge chart plugin if needed -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-gauge@0.3.0/dist/chartjs-gauge.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-gauge/dist/chartjs-gauge.min.js"></script>
+   
+   <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .header {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #2c3e50;
+        }
+        .filter-form {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .filter-form label {
+            font-weight: bold;
+        }
+        .filter-form input[type="date"] {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .filter-form button {
+            padding: 6px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .filter-form button:hover {
+            background-color: #2980b9;
+        }
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+        }
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            overflow: hidden;
+        }
+        .section h2 {
+            margin: 0 0 15px;
+            font-size: 20px;
+            color: #34495e;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+        }
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            overflow-y:scroll ;
+        }
+        .table-container {
+            overflow-x: auto;
+            overflow-y: scroll;
+            height: 500px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Financial Dashboard</h1>
+    </div>
+
+    <form method="GET" class="filter-form">
+        <label>Start Date: <input type="date" name="start_date" value="{{ start_date }}"></label>
+        <label>End Date: <input type="date" name="end_date" value="{{ end_date }}"></label>
+        <button type="submit">Filter</button>
+    </form>
+
+    <div class="dashboard">
+        <!-- Section 1: Income & Expenses -->
+        <div class="section">
+            <h2>Income by Category</h2>
+            <div class="chart-container">
+                <canvas id="incomeByCategory"></canvas>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Expenses by Category</h2>
+            <div class="chart-container">
+                <canvas id="expensesByCategory"></canvas>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Monthly Income</h2>
+            <div class="chart-container">
+                <canvas id="monthlyIncome"></canvas>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Monthly Expenses</h2>
+            <div class="chart-container">
+                <canvas id="monthlyExpenses"></canvas>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Income vs Expense Trend</h2>
+            <div class="chart-container">
+                <canvas id="incomeExpenseTrend"></canvas>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Top 5 Expenses</h2>
+            <div class="chart-container">
+                <canvas id="topExpenses"></canvas>
+            </div>
+        </div>
+
+        <!-- Section 2: Budget & Savings -->
+        <div class="section">
+            <h2>Budget vs Actual</h2>
+            <div class="chart-container">
+                <canvas id="budgetVsActual"></canvas>
+            </div>
+        </div>
+        <!-- <div class="section" >
+            <h2>Savings Progress</h2>
+            <div class="chart-container">
+                <canvas id="savingsProgress"></canvas>
+            </div>
+        </div> -->
+        
+        <div class="section table-container">
+            <h2>Monthly Budget Summary</h2>
+            <table>
+                <tr><th>Category</th><th>Budget</th><th>Spent</th></tr>
+                {% for budget in monthly_budget %}
+                    <tr><td>{{ budget.expensecategory__expensetype_name }}</td><td>{{ budget.budget_amount }}</td><td>{{ budget.spent|default:0 }}</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- Section 3: Miscellaneous -->
+        <!-- <div class="section">
+            <h2>Repayment Status</h2>
+            <div class="chart-container">
+                <canvas id="repaymentStatus"></canvas>
+            </div>
+        </div> -->
+        <!-- <div class="section">
+            <h2>Complaint Status</h2>
+            <div class="chart-container">
+                <canvas id="complaintStatus"></canvas>
+            </div>
+        </div> -->
+        <div class="section table-container">
+            <h2>Transaction History</h2>
+            <table>
+                <tr><th>Date</th><th>Amount</th><th>Category</th></tr>
+                {% for trans in transactions %}
+                    <tr><td>{{ trans.expense_date }}</td><td>{{ trans.expense_amount }}</td><td>{{ trans.expensecategory__expensetype_name }}</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+        <!-- <div class="section table-container">
+            <h2>Feedback Summary</h2>
+            <table>
+                <tr><th>Date</th><th>Content</th></tr>
+                {% for feedback in feedback_summary %}
+                    <tr><td>{{ feedback.feedback_date }}</td><td>{{ feedback.feedback_content }}</td></tr>
+                {% endfor %}
+            </table>
+        </div> -->
+        <!-- <div class="section table-container">
+            <h2>Notification History</h2>
+            <table>
+                <tr><th>Title</th><th>Payment Date</th><th>Acknowledged</th></tr>
+                {% for noti in notifications %}
+                    <tr><td>{{ noti.repaymentnotification_title }}</td><td>{{ noti.repaymentnotification_paymentdate }}</td><td>{{ noti.last_acknowledged_date|default:"Not yet" }}</td></tr>
+                {% endfor %}
+            </table>
+        </div> -->
+    </div>
+
+    <script>
+        // Chart.js configurations (unchanged from your original)
+        const incomeByCategory = new Chart(document.getElementById('incomeByCategory'), {
+            type: 'pie',
+            data: {
+                labels: {{ income_by_category|safe }}.map(x => x.incomecategory__incometype_name),
+                datasets: [{ data: {{ income_by_category|safe }}.map(x => x.total), backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', 
+                '#D7BDE2', '#6495ED', '#F1948A', '#F7DC6F', '#48C9B0', 
+                '#BB8FCE', '#F8C471', '#82E0AA', '#A3E4D7', '#F5CBA7', 
+                '#85C1E9', '#7FB3D5', '#F9E79F', '#7DCEA0', '#B2BABB'] }]
+            },
+            options: { title: { display: true, text: 'Income by Category' } }
+        });
+
+        const expensesByCategory = new Chart(document.getElementById('expensesByCategory'), {
+            type: 'pie',
+            data: {
+                labels: {{ expenses_by_category|safe }}.map(x => x.expensecategory__expensetype_name),
+                datasets: [{ data: {{ expenses_by_category|safe }}.map(x => x.total), backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', 
+                '#D7BDE2', '#6495ED', '#F1948A', '#F7DC6F', '#48C9B0', 
+                '#BB8FCE', '#F8C471', '#82E0AA', '#A3E4D7', '#F5CBA7', 
+                '#85C1E9', '#7FB3D5', '#F9E79F', '#7DCEA0', '#B2BABB'] }]
+            },
+            options: { title: { display: true, text: 'Expenses by Category' } }
+        });
+
+        const monthlyIncome = new Chart(document.getElementById('monthlyIncome'), {
+            type: 'bar',
+            data: {
+                labels: {{ monthly_income|safe }}.map(x => x.month),
+                datasets: [{ label: 'Income', data: {{ monthly_income|safe }}.map(x => x.total), backgroundColor: '#36A2EB' }]
+            },
+            options: { title: { display: true, text: 'Monthly Income' } }
+        });
+
+        const monthlyExpenses = new Chart(document.getElementById('monthlyExpenses'), {
+            type: 'bar',
+            data: {
+                labels: {{ monthly_expenses|safe }}.map(x => x.month),
+                datasets: [{ label: 'Expenses', data: {{ monthly_expenses|safe }}.map(x => x.total), backgroundColor: '#FF6384' }]
+            },
+            options: { title: { display: true, text: 'Monthly Expenses' } }
+        });
+
+        const budgetVsActual = new Chart(document.getElementById('budgetVsActual'), {
+            type: 'bar',
+            data: {
+                labels: {{ budget_vs_actual|safe }}.map(x => x.expensecategory__expensetype_name),
+                datasets: [
+                    { label: 'Budget', data: {{ budget_vs_actual|safe }}.map(x => x.budget_amount), backgroundColor: '#36A2EB' },
+                    { label: 'Actual', data: {{ budget_vs_actual|safe }}.map(x => x.actual || 0), backgroundColor: '#FF6384' }
+                ]
+            },
+            options: { title: { display: true, text: 'Budget vs Actual' } }
+        });
+
+        // const savingsProgress = new Chart(document.getElementById('savingsProgress'), {
+        //     type: 'line',
+        //     data: {
+        //         labels: {{ savings_progress|safe }}.map(x => x.month),
+        //         datasets: [{ label: 'Savings', data: {{ savings_progress|safe }}.map(x => x.total), borderColor: '#4BC0C0' }]
+        //     },
+        //     options: { title: { display: true, text: 'Savings Progress' } }
+        // });
+
+        const repaymentStatus = new Chart(document.getElementById('repaymentStatus'), {
+            type: 'pie',
+            data: {
+                labels: {{ repayment_status|safe }}.map(x => x.repayment_name),
+                datasets: [{ data: {{ repayment_status|safe }}.map(x => x.total), backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'] }]
+            },
+            options: { title: { display: true, text: 'Repayment Status' } }
+        });
+
+        const incomeExpenseTrend = new Chart(document.getElementById('incomeExpenseTrend'), {
+            type: 'line',
+            data: {
+                labels: {{ income_expense_trend|safe }}.income.map(x => x.month),
+                datasets: [
+                    { label: 'Income', data: {{ income_expense_trend|safe }}.income.map(x => x.total), borderColor: '#36A2EB' },
+                    { label: 'Expense', data: {{ income_expense_trend|safe }}.expense.map(x => x.total), borderColor: '#FF6384' }
+                ]
+            },
+            options: { title: { display: true, text: 'Income vs Expense Trend' } }
+        });
+
+        const topExpenses = new Chart(document.getElementById('topExpenses'), {
+            type: 'bar',
+            data: {
+                labels: {{ top_expenses|safe }}.map(x => x.expensecategory__expensetype_name),
+                datasets: [{ label: 'Amount', data: {{ top_expenses|safe }}.map(x => x.total), backgroundColor: '#FFCE56' }]
+            },
+            options: { title: { display: true, text: 'Top 5 Expenses' } }
+        });
+
+       const savingsGoals = new Chart(document.getElementById('savingsGoals'), {
+            type: 'gauge',
+            data: {
+                datasets: [{
+                    value: {{ savings_goals|safe }}[0]?.total_saved || 0,
+                    minValue: 0,
+                    maxValue: {{ savings_goals|safe }}[0]?.savinghead_goal || 100,
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                    label: {{ savings_goals|safe }}[0]?.savinghead_title || 'Savings'
+                }]
+            },
+            options: { title: { display: true, text: 'Savings Goal Progress' } }
+        }); 
+
+        const complaintStatus = new Chart(document.getElementById('complaintStatus'), {
+            type: 'pie',
+            data: {
+                labels: {{ complaint_status|safe }}.map(x => x.complaint_status),
+                datasets: [{ data: {{ complaint_status|safe }}.map(x => x.count), backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'] }]
+            },
+            options: { title: { display: true, text: 'Complaint Status' } }
+        });
+    </script>
+</body>
+</html>
+
+{% endblock content %}

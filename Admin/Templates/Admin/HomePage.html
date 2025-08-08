@@ -1,0 +1,193 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<!-- [Head] start -->
+<head>
+  <title>Budgetify | Admin</title>
+  <!-- [Meta] -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Mantis is made using Bootstrap 5 design framework. Download the free admin template & use it for your project.">
+  <meta name="keywords" content="Mantis, Dashboard UI Kit, Bootstrap 5, Admin Template, Admin Dashboard, CRM, CMS, Bootstrap Admin Template">
+  <meta name="author" content="CodedThemes">
+
+  <!-- [Favicon] icon -->
+  <link rel="icon" href="{% static 'Admin/assets/images/favicon.svg' %}" type="image/x-icon">
+  <!-- [Google Font] Family -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" id="main-font-link">
+  <!-- [Tabler Icons] -->
+  <link rel="stylesheet" href="{% static 'Admin/assets/fonts/tabler-icons.min.css' %}">
+  <!-- [Feather Icons] -->
+  <link rel="stylesheet" href="{% static 'Admin/assets/fonts/feather.css' %}">
+  <!-- [Font Awesome Icons] -->
+  <link rel="stylesheet" href="{% static 'Admin/assets/fonts/fontawesome.css' %}">
+  <!-- [Material Icons] -->
+  <link rel="stylesheet" href="{% static 'Admin/assets/fonts/material.css' %}">
+  <!-- [Template CSS Files] -->
+  <link rel="stylesheet" href="{% static 'Admin/assets/css/style.css' %}" id="main-style-link">
+  <link rel="stylesheet" href="{% static 'Admin/assets/css/style-preset.css' %}">
+</head>
+<!-- [Head] end -->
+<!-- [Body] Start -->
+<body data-pc-preset="preset-1" data-pc-direction="ltr" data-pc-theme="light">
+  <!-- [ Pre-loader ] start -->
+  <div class="loader-bg">
+    <div class="loader-track">
+      <div class="loader-fill"></div>
+    </div>
+  </div>
+  <!-- [ Pre-loader ] End -->
+  <!-- [ Sidebar Menu ] start -->
+  <nav class="pc-sidebar">
+    <a href="#" class="navbar-brand p-0">
+      <h1 class="text-primary mb-0"><i class="fab fa-slack me-2"></i>Budgetify</h1>
+      <!-- <img src="{% static 'Main/img/logo.png' %}" alt="Logo"> -->
+    </a>
+    
+      <div class="navbar-content">
+        <ul class="pc-navbar">
+          <li class="pc-item">
+            <a href="{% url 'Admin:homepage' %}" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-dashboard"></i></span>
+              <span class="pc-mtext">Dashboard</span>
+            </a>
+          </li>
+          <!-- <li class="pc-item">
+            <a href="{% url 'Admin:adminregistration' %}" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-typography"></i></span>
+              <span class="pc-mtext">Admin Registration</span>
+            </a>
+          </li> -->
+          <li class="pc-item">
+            <a href="{% url 'Admin:expensetype' %}" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-color-swatch"></i></span>
+              <span class="pc-mtext">Expense Type</span>
+            </a>
+          </li>
+          <li class="pc-item">
+            <a href="{% url 'Admin:incometype' %}" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-plant-2"></i></span>
+              <span class="pc-mtext">Income Type</span>
+            </a>
+          </li>
+          <li class="pc-item pc-caption">
+            <label>Others</label>
+            <i class="ti ti-news"></i>
+          </li>
+          
+          <li class="pc-item">
+            <a href="{% url 'Admin:viewcomplaint' %}" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-user-plus"></i></span>
+              <span class="pc-mtext">View Complaint</span>
+            </a>
+          </li>
+          <li class="pc-item">
+            <a href="{% url 'Admin:feedback' %}" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-user-plus"></i></span>
+              <span class="pc-mtext">Feedback Summary</span>
+            </a>
+          </li>
+          <li class="pc-item">
+            <a href="{%  url 'Admin:logout'  %}" class="pc-link">
+              <span class="pc-micon"><i class="ti ti-user-plus"></i></span>
+              <span class="pc-mtext">Logout</span>
+            </a>
+          </li>
+          <!-- Other menu items remain unchanged -->
+        </ul>
+        
+      </div>
+    </div>
+  </nav>
+  <!-- [ Sidebar Menu ] end -->
+  <!-- [ Header Topbar ] start -->
+  <header class="pc-header">
+    <div class="header-wrapper">
+      <div class="me-auto pc-mob-drp">
+        <ul class="list-unstyled">
+          <li class="pc-h-item pc-sidebar-collapse">
+            <a href="#" class="pc-head-link ms-0" id="sidebar-hide">
+              <i class="ti ti-menu-2"></i>
+            </a>
+          </li>
+          <li class="pc-h-item pc-sidebar-popup">
+            <a href="#" class="pc-head-link ms-0" id="mobile-collapse">
+              <i class="ti ti-menu-2"></i>
+            </a>
+          </li>
+          <!-- Search and other header items remain unchanged -->
+        </ul>
+      </div>
+      <div class="ms-auto">
+        <ul class="list-unstyled">
+          <!-- Header dropdowns remain unchanged -->
+        </ul>
+      </div>
+    </div>
+  </header>
+  <!-- [ Header ] end -->
+
+  <!-- [ Main Content ] start -->
+  <div class="pc-container">
+    <div class="pc-content">
+      <!-- [ breadcrumb ] start -->
+      <div class="page-header">
+        <div class="page-block">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <div class="page-header-title">
+                <h5 class="m-b-10">Home</h5>
+              </div>
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'Admin:homepage' %}">Home</a></li>
+                <li class="breadcrumb-item" aria-current="page">Dashboard</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- [ breadcrumb ] end -->
+      <!-- [ Welcome Message ] start -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card text-center">
+            <div class="card-body">
+              <h1 class="display-4 text-primary">Welcome!!</h1>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- [ Welcome Message ] end -->
+    </div>
+  </div>
+  <!-- [ Main Content ] end -->
+
+  <footer class="pc-footer">
+    <div class="footer-wrapper container-fluid">
+      <div class="row">
+        <div class="col-12 text-center">
+          <h3 class="text-white"><i class="fab fa-slack me-3"></i> Budgetify</h3>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Required Js -->
+  <script src="{% static 'Admin/assets/js/plugins/popper.min.js' %}"></script>
+  <script src="{% static 'Admin/assets/js/plugins/simplebar.min.js' %}"></script>
+  <script src="{% static 'Admin/assets/js/plugins/bootstrap.min.js' %}"></script>
+  <script src="{% static 'Admin/assets/js/fonts/custom-font.js' %}"></script>
+  <script src="{% static 'Admin/assets/js/pcoded.js' %}"></script>
+  <script src="{% static 'Admin/assets/js/plugins/feather.min.js' %}"></script>
+
+  <script>layout_change('light');</script>
+  <script>change_box_container('false');</script>
+  <script>layout_rtl_change('false');</script>
+  <script>preset_change("preset-1");</script>
+  <script>font_change("Public-Sans");</script>
+</body>
+<!-- [Body] end -->
+</html>

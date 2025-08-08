@@ -1,0 +1,116 @@
+{% extends 'User/Header.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Expense Form -->
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Expense Entry</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <label for="txt_amount" class="col-sm-3 col-form-label">Amount</label>
+                        <div class="col-sm-9">
+                            <input type="number" class="form-control" id="txt_amount" name="txt_amount" 
+                                min="0" step="0.01" 
+                                title="Enter a valid amount (minimum 0)"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="txt_note" class="col-sm-3 col-form-label">Note</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="txt_note" name="txt_note" 
+                                pattern="^[A-Z]+[a-zA-Z0-9 .,!?]*$" 
+                                title="Note must start with a capital letter and can contain letters, numbers, spaces, and basic punctuation"
+                                required>
+                        </div>
+                    </div>
+
+                    <!-- <div class="row mb-3">
+                        <label for="file_bill" class="col-sm-3 col-form-label">Bill</label>
+                        <div class="col-sm-9">
+                            <input type="file" class="form-control" id="file_bill" name="file_bill">
+                        </div>
+                    </div> -->
+
+                    <div class="row mb-3">
+                        <label for="txt_expensetype" class="col-sm-3 col-form-label">Category</label>
+                        <div class="col-sm-9">
+                            <select class="form-select" name="txt_expensetype" id="txt_expensetype" required>
+                                <option value="">------Select-------</option>
+                                {% for i in expensetypeData %}
+                                <option value="{{i.id}}">{{i.expensetype_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-9 offset-sm-3">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Expense Table -->
+<div class="row justify-content-center mt-5 mb-5">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Expense List</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>SI NO.</th>
+                            <th>NOTE</th>
+                            <th>CATEGORY</th>
+                            <th>AMOUNT</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in expenseData %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{i.expense_note}}</td>
+                            <td>{{i.expensecategory.expensetype_name}}</td>
+                            <td>{{i.expense_amount}}</td>
+                            <td><a href="{% url 'User:deleteExpense' i.id %}" class="btn btn-danger btn-sm">Delete</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location = "{% url 'User:expense' %}"
+    </script>
+{% endif %}
+</html>
+
+{% endblock content %}
